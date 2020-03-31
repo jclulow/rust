@@ -8,19 +8,19 @@ RUN bash /tmp/cross-apt-packages.sh
 
 # Required for cross-build gcc
 RUN apt-get update && \
-  apt-get install -y --no-install-recommends \
-    libgmp-dev \
-    libmpfr-dev \
-    libmpc-dev
+    apt-get install -y --no-install-recommends \
+      libgmp-dev \
+      libmpfr-dev \
+      libmpc-dev
 
 COPY scripts/illumos-toolchain.sh /tmp/
 
-RUN bash /tmp/illumos-toolchain.sh sysroot
-RUN bash /tmp/illumos-toolchain.sh binutils
-RUN bash /tmp/illumos-toolchain.sh gcc
+RUN bash /tmp/illumos-toolchain.sh x86_64 sysroot
+RUN bash /tmp/illumos-toolchain.sh x86_64 binutils
+RUN bash /tmp/illumos-toolchain.sh x86_64 gcc
 
-#COPY scripts/sccache.sh /scripts/
-#RUN sh /scripts/sccache.sh
+COPY scripts/sccache.sh /scripts/
+RUN sh /scripts/sccache.sh
 
 ENV \
     AR_x86_64_sun_solaris=x86_64-sun-solaris2.10-ar \
