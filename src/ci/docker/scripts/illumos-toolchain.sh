@@ -17,24 +17,32 @@ esac
 
 BUILD_TARGET="$1-sun-solaris2.10"
 
-BINUTILS_VERSION='2.25.1'
-BINUTILS_MD5='ac493a78de4fee895961d025b7905be4'
-GCC_VERSION='7.5.0'
-GCC_MD5='79cb8a65d44dfc8a2402b46395535c9a'
+#
+# NOTE: The compiler version selected here is more specific than might appear.
+# GCC 7.X releases do not appear to cross-compile correctly for Solaris
+# targets, at least insofar as they refuse to enable TLS in libstdc++.  When
+# changing the GCC version in future, one must carefully verify that TLS is
+# enabled in all of the static libraries we intend to include in output
+# binaries.
+#
+GCC_VERSION='8.4.0'
+GCC_MD5='bb815a8e3b7be43c4a26fa89dbbd9795'
+GCC_BASE="gcc-$GCC_VERSION"
+GCC_TAR="gcc-$GCC_VERSION.tar.xz"
+GCC_URL="https://ftp.gnu.org/gnu/gcc/$GCC_BASE/$GCC_TAR"
+
 SYSROOT_VER="$SYSROOT_MACH-20200312-161829"
 SYSROOT_MD5='d61f8d2e10cc12b97ccd8b92b80493a2'
-
 SYSROOT_TAR="sysroot-illumos-$SYSROOT_VER.tar.gz"
 SYSROOT_URL="https://illumos.org/downloads/$SYSROOT_TAR"
 SYSROOT_DIR='/ws/sysroot'
 
+BINUTILS_VERSION='2.25.1'
+BINUTILS_MD5='ac493a78de4fee895961d025b7905be4'
 BINUTILS_BASE="binutils-$BINUTILS_VERSION"
 BINUTILS_TAR="$BINUTILS_BASE.tar.bz2"
 BINUTILS_URL="https://ftp.gnu.org/gnu/binutils/$BINUTILS_TAR"
 
-GCC_BASE="gcc-$GCC_VERSION"
-GCC_TAR="gcc-$GCC_VERSION.tar.xz"
-GCC_URL="https://ftp.gnu.org/gnu/gcc/$GCC_BASE/$GCC_TAR"
 
 download_file() {
 	local file="$1"
