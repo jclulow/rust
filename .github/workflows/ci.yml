@@ -330,6 +330,7 @@ jobs:
           - dist-x86_64-apple
           - dist-x86_64-apple-alt
           - dist-x86_64-freebsd
+          - dist-x86_64-illumos
           - dist-x86_64-linux
           - dist-x86_64-linux-alt
           - dist-x86_64-mingw
@@ -424,6 +425,9 @@ jobs:
             os: ubuntu-latest-xl
             env: {}
           - name: dist-x86_64-freebsd
+            os: ubuntu-latest-xl
+            env: {}
+          - name: dist-x86_64-illumos
             os: ubuntu-latest-xl
             env: {}
           - name: dist-x86_64-linux

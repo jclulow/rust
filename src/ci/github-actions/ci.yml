@@ -327,6 +327,7 @@ jobs:
           - dist-x86_64-apple
           - dist-x86_64-apple-alt
           - dist-x86_64-freebsd
+          - dist-x86_64-illumos
           - dist-x86_64-linux
           - dist-x86_64-linux-alt
           - dist-x86_64-mingw
@@ -425,6 +426,9 @@ jobs:
             <<: *job-linux-xl
 
           - name: dist-x86_64-freebsd
+            <<: *job-linux-xl
+
+          - name: dist-x86_64-illumos
             <<: *job-linux-xl
 
           - name: dist-x86_64-linux
