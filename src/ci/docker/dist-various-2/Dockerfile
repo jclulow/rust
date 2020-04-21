@@ -28,6 +28,11 @@ RUN apt-get update && apt-get build-dep -y clang llvm && apt-get install -y --no
 RUN apt-key adv --batch --yes --keyserver keyserver.ubuntu.com --recv-keys 74DA7924C5513486
 RUN add-apt-repository -y 'deb http://apt.dilos.org/dilos dilos2 main'
 
+COPY scripts/illumos-toolchain.sh /tmp/
+RUN bash /tmp/illumos-toolchain.sh x86_64 sysroot
+RUN bash /tmp/illumos-toolchain.sh x86_64 binutils
+RUN bash /tmp/illumos-toolchain.sh x86_64 gcc
+
 WORKDIR /build
 COPY scripts/musl.sh /build
 RUN env \
@@ -63,17 +68,19 @@ ENV \
     AR_aarch64_fuchsia=aarch64-fuchsia-ar \
     CC_aarch64_fuchsia=aarch64-fuchsia-clang \
     CXX_aarch64_fuchsia=aarch64-fuchsia-clang++ \
-    AR_sparcv9_sun_solaris=sparcv9-sun-solaris2.10-ar \
-    CC_sparcv9_sun_solaris=sparcv9-sun-solaris2.10-gcc \
-    CXX_sparcv9_sun_solaris=sparcv9-sun-solaris2.10-g++ \
-    AR_x86_64_sun_solaris=x86_64-sun-solaris2.10-ar \
-    CC_x86_64_sun_solaris=x86_64-sun-solaris2.10-gcc \
-    CXX_x86_64_sun_solaris=x86_64-sun-solaris2.10-g++ \
+    AR_sparcv9_sun_solaris=sparcv9-solaris-ar \
+    CC_sparcv9_sun_solaris=sparcv9-solaris-gcc \
+    CXX_sparcv9_sun_solaris=sparcv9-solaris-g++ \
+    AR_x86_64_sun_solaris=x86_64-solaris-ar \
+    CC_x86_64_sun_solaris=x86_64-solaris-gcc \
+    CXX_x86_64_sun_solaris=x86_64-solaris-g++ \
+    AR_x86_64_unknown_illumos=x86_64-illumos-ar \
+    CC_x86_64_unknown_illumos=x86_64-illumos-gcc \
+    CXX_x86_64_unknown_illumos=x86_64-illumos-g++ \
     CC_armv7_unknown_linux_gnueabi=arm-linux-gnueabi-gcc-7 \
     CXX_armv7_unknown_linux_gnueabi=arm-linux-gnueabi-g++-7 \
     CC=gcc-7 \
     CXX=g++-7
-
 ENV CARGO_TARGET_X86_64_FUCHSIA_AR /usr/local/bin/llvm-ar
 ENV CARGO_TARGET_X86_64_FUCHSIA_RUSTFLAGS \
 -C link-arg=--sysroot=/usr/local/x86_64-fuchsia \
@@ -84,6 +91,8 @@ ENV CARGO_TARGET_AARCH64_FUCHSIA_RUSTFLAGS \
 -C link-arg=--sysroot=/usr/local/aarch64-fuchsia \
 -C link-arg=-L/usr/local/aarch64-fuchsia/lib \
 -C link-arg=-L/usr/local/lib/aarch64-fuchsia/lib
+
+ENV HOSTS=x86_64-unknown-illumos
 
 ENV TARGETS=x86_64-fuchsia
 ENV TARGETS=$TARGETS,aarch64-fuchsia
@@ -110,4 +119,4 @@ ENV RUST_CONFIGURE_ARGS --enable-extended --enable-lld --disable-docs \
   --set target.wasm32-wasi.wasi-root=/wasm32-wasi \
   --musl-root-armv7=/musl-armv7
 
-ENV SCRIPT python3 ../x.py dist --target $TARGETS
+ENV SCRIPT python3 ../x.py dist --host $HOSTS --target $HOSTS,$TARGETS

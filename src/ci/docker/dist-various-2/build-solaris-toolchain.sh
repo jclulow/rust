@@ -16,7 +16,9 @@ cd binutils
 curl https://ftp.gnu.org/gnu/binutils/binutils-$BINUTILS.tar.xz | tar xJf -
 mkdir binutils-build
 cd binutils-build
-hide_output ../binutils-$BINUTILS/configure --target=$ARCH-sun-solaris2.10
+hide_output ../binutils-$BINUTILS/configure \
+  --target=$ARCH-sun-solaris2.10            \
+  --program-prefix="$ARCH-solaris-"
 hide_output make -j10
 hide_output make install
 
@@ -74,21 +76,22 @@ cd gcc-$GCC
 
 mkdir ../gcc-build
 cd ../gcc-build
-hide_output ../gcc-$GCC/configure \
-  --enable-languages=c,c++        \
-  --target=$ARCH-sun-solaris2.10  \
-  --with-gnu-as                   \
-  --with-gnu-ld                   \
-  --disable-multilib              \
-  --disable-nls                   \
-  --disable-libgomp               \
-  --disable-libquadmath           \
-  --disable-libssp                \
-  --disable-libvtv                \
-  --disable-libcilkrts            \
-  --disable-libada                \
-  --disable-libsanitizer          \
-  --disable-libquadmath-support   \
+hide_output ../gcc-$GCC/configure   \
+  --enable-languages=c,c++          \
+  --target=$ARCH-sun-solaris2.10    \
+  --program-prefix="$ARCH-solaris-" \
+  --with-gnu-as                     \
+  --with-gnu-ld                     \
+  --disable-multilib                \
+  --disable-nls                     \
+  --disable-libgomp                 \
+  --disable-libquadmath             \
+  --disable-libssp                  \
+  --disable-libvtv                  \
+  --disable-libcilkrts              \
+  --disable-libada                  \
+  --disable-libsanitizer            \
+  --disable-libquadmath-support     \
   --disable-lto
 
 hide_output make -j10
