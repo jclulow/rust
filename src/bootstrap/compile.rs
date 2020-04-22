@@ -722,7 +722,13 @@ impl Step for Assemble {
         builder.ensure(Rustc { compiler: build_compiler, target: target_compiler.host });
 
         let lld_install = if builder.config.lld_enabled {
-            Some(builder.ensure(native::Lld { target: target_compiler.host }))
+            if builder.config.build != target_compiler.host && target_compiler.host.contains("illumos") {
+                // Cross compilation of LLD does not work today, at least
+                // on a Linux host for an illumos target.
+                None
+            } else {
+                Some(builder.ensure(native::Lld { target: target_compiler.host }))
+            }
         } else {
             None
         };
