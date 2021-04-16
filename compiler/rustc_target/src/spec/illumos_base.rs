@@ -12,6 +12,15 @@ pub fn opts() -> TargetOptions {
             // libc, but at least historically these have been provided in
             // libssp.so on illumos and Solaris systems.
             "-lssp".to_string(),
+
+            // The illumos libc contains a stack unwinding implementation, as
+            // does libgcc_s.  The latter implementation includes several
+            // additional symbols that are not always in base libc.  To force
+            // the consistent use of just one unwinder, we ensure libc appears
+            // after libgcc_s in the NEEDED list for the resultant binary by
+            // ignoring any attempts to add it as a dynamic dependency until the
+            // very end.
+            "-lc".to_string(),
         ],
     );
 

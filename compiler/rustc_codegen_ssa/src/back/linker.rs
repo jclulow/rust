@@ -339,8 +339,15 @@ impl<'a> Linker for GccLinker<'a> {
     }
 
     fn link_dylib(&mut self, lib: Symbol) {
+        let larg = format!("-l{}", lib);
+        if self.sess.target.os == "illumos" && larg == "-lc" {
+            // libc will be added via late_link_args on illumos so that it will
+            // appear last in the library search order.
+            return;
+        }
+
         self.hint_dynamic();
-        self.cmd.arg(format!("-l{}", lib));
+        self.cmd.arg(larg);
     }
     fn link_staticlib(&mut self, lib: Symbol) {
         self.hint_static();
